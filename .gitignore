@@ -1,0 +1,21 @@
+# 运行时数据：绝不要提交（里面有你的真实记录）
+data/
+backup/
+reports/
+export/
+import/
+启动日志.txt
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# 临时 / 编辑器
+*.tmp
+*.bak
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/

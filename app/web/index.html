@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>加油！专注工作记录</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="top">
+  <div class="brandline">
+    <div class="brand">加油！专注工作记录<small>本地离线 · 数据只在这台电脑上</small></div>
+    <div class="spacer"></div>
+    <button class="btn small" id="btn-theme" title="切换浅色/深色">深色</button>
+    <button class="btn small" id="btn-compact" title="切换紧凑视图">紧凑</button>
+  </div>
+  <nav class="tabs" id="tabs">
+    <button data-view="home" class="active">首页/今天</button>
+    <button data-view="records">记录</button>
+    <button data-view="stats">统计</button>
+    <button data-view="plan">计划</button>
+    <button data-view="summary">总结</button>
+    <button data-view="settings">设置</button>
+  </nav>
+</header>
+
+<main>
+  <!-- ============================ 首页 ============================ -->
+  <section class="view active" id="view-home">
+    <div id="home-notices"></div>
+
+    <div class="card hero">
+      <div class="label">今日实际工作时长（科研+会议，去重）</div>
+      <div class="big" id="hero-work">0:00</div>
+      <div class="meta" id="hero-meta">—</div>
+      <div class="encourage">做好细末是很棒的！</div>
+    </div>
+
+    <div class="card">
+      <h2>选好三项就能开始计时 <span class="sub">大类 + 二级任务 + 标签，缺一项不能开始</span></h2>
+      <div id="timer-area"></div>
+      <div class="mt12" id="start-area"></div>
+    </div>
+
+    <div class="grid2">
+      <div class="card">
+        <h2>今日记录 <span class="sub" id="today-count"></span></h2>
+        <div class="table-wrap" id="today-list"></div>
+      </div>
+      <div class="card">
+        <h2>今天的目标进度 <span class="sub">还差多少</span></h2>
+        <div id="today-goal"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================ 记录 ============================ -->
+  <section class="view" id="view-records">
+    <div class="card">
+      <h2>补录一条 <span class="sub">日期 + 大类 + 二级任务 + 标签 + 时长 都要填</span></h2>
+      <div id="manual-form"></div>
+    </div>
+
+    <div class="card">
+      <h2>按日查看 <span class="sub">空白日标「未记录」，点一下就能去补录</span></h2>
+      <div class="inline" style="margin-bottom:10px">
+        <label class="f" style="flex:0 0 160px"><span>开始</span><input type="date" id="rec-start"></label>
+        <label class="f" style="flex:0 0 160px"><span>结束</span><input type="date" id="rec-end"></label>
+        <div style="flex:0 0 auto"><button class="btn" id="rec-load">查看</button></div>
+        <div style="flex:0 0 auto"><button class="btn" id="rec-week">本周</button></div>
+        <div style="flex:0 0 auto"><button class="btn" id="rec-month">本月</button></div>
+        <div style="flex:0 0 auto"><button class="btn" id="rec-all">全部</button></div>
+      </div>
+      <div id="rec-summary" class="statline" style="margin-bottom:8px"></div>
+      <div class="table-wrap" id="rec-days"></div>
+    </div>
+
+    <div class="card">
+      <h2>回收站 <span class="sub">删除的记录都在这里，可以恢复</span></h2>
+      <div class="table-wrap" id="rec-deleted"></div>
+    </div>
+  </section>
+
+  <!-- ============================ 统计 ============================ -->
+  <section class="view" id="view-stats">
+    <div class="card">
+      <h2>统计区间</h2>
+      <div class="inline">
+        <div style="flex:0 0 auto"><button class="btn" data-stat="today">今天</button></div>
+        <div style="flex:0 0 auto"><button class="btn" data-stat="week">本周</button></div>
+        <div style="flex:0 0 auto"><button class="btn" data-stat="month">本月</button></div>
+        <label class="f" style="flex:0 0 150px"><span>开始</span><input type="date" id="st-start"></label>
+        <label class="f" style="flex:0 0 150px"><span>结束</span><input type="date" id="st-end"></label>
+        <div style="flex:0 0 auto"><button class="btn" data-stat="custom">查看</button></div>
+      </div>
+    </div>
+
+    <div class="card"><div id="st-overview"></div></div>
+    <div class="card"><h2>每日柱状（按大类堆叠）</h2><div class="chart" id="st-daily"></div></div>
+    <div class="grid2">
+      <div class="card"><h2>大类占比</h2><div class="chart" id="st-pie"></div></div>
+      <div class="card"><h2>Top 任务</h2><div class="chart" id="st-top"></div></div>
+    </div>
+    <div class="card"><h2>月度对比</h2><div class="chart" id="st-months"></div></div>
+    <div class="card"><h2>目标达成</h2><div id="st-goals"></div></div>
+    <div class="card"><h2>每日明细 <span class="sub">含「未记录」标记</span></h2>
+      <div class="table-wrap" id="st-days"></div>
+    </div>
+  </section>
+
+  <!-- ============================ 计划 ============================ -->
+  <section class="view" id="view-plan">
+    <div class="card">
+      <h2>排一条计划 <span class="sub">二级任务必填；计划时长可以留空</span></h2>
+      <div id="plan-form"></div>
+    </div>
+    <div class="card">
+      <h2>周计划 <span class="sub">一次给一周（周一~周日）排计划</span></h2>
+      <div class="inline" style="margin-bottom:8px">
+        <label class="f" style="flex:0 0 170px"><span>哪一周（选其中一天即可）</span>
+          <input type="date" id="pw-day"></label>
+        <div style="flex:0 0 auto"><button class="btn" id="pw-add-row">加一行</button></div>
+        <div style="flex:0 0 auto"><button class="btn primary" id="pw-save">保存这一周的计划</button></div>
+      </div>
+      <div id="pw-rows"></div>
+    </div>
+    <div class="card">
+      <h2>计划 vs 实际 <span class="sub">计划任务数/执行数、时长偏差、未执行清单</span></h2>
+      <div id="plan-compare"></div>
+    </div>
+    <div class="card"><h2>计划清单</h2><div class="table-wrap" id="plan-list"></div></div>
+  </section>
+
+  <!-- ============================ 总结 ============================ -->
+  <section class="view" id="view-summary">
+    <div class="card">
+      <h2>生成总结 <span class="sub">本周 / 本月 / 上周 / 上月 / 自定义</span></h2>
+      <div class="inline">
+        <div style="flex:0 0 auto"><button class="btn" data-rep="week">本周</button></div>
+        <div style="flex:0 0 auto"><button class="btn" data-rep="last_week">上周</button></div>
+        <div style="flex:0 0 auto"><button class="btn" data-rep="month">本月</button></div>
+        <div style="flex:0 0 auto"><button class="btn" data-rep="last_month">上月</button></div>
+        <label class="f" style="flex:0 0 150px"><span>自定义开始</span><input type="date" id="rp-start"></label>
+        <label class="f" style="flex:0 0 150px"><span>自定义结束</span><input type="date" id="rp-end"></label>
+        <div style="flex:0 0 auto"><button class="btn primary" data-rep="custom">生成</button></div>
+      </div>
+      <div class="hint mt8">生成后可以一键复制全文；周报/月报会自动保存到 reports\ 目录。</div>
+    </div>
+
+    <div class="card">
+      <h2>总结内容 <span class="sub" id="rp-title"></span></h2>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px">
+        <button class="btn primary" id="rp-copy">一键复制全文</button>
+        <button class="btn" id="rp-save">另存到 reports\</button>
+        <button class="btn" id="rp-open">打开 reports\ 目录</button>
+      </div>
+      <div class="mdview" id="rp-body">还没有生成总结。上面选一个区间点「生成」。</div>
+    </div>
+
+    <div class="card">
+      <h2>已生成的周报 / 月报</h2>
+      <div class="table-wrap" id="rp-list"></div>
+    </div>
+  </section>
+
+  <!-- ============================ 设置 ============================ -->
+  <section class="view" id="view-settings">
+    <div class="grid2">
+      <div class="card">
+        <h2>大类管理 <span class="sub">默认 5 类不可删除，可改名/排序/归档</span></h2>
+        <div id="set-cats"></div>
+        <div class="inline mt8">
+          <label class="f"><span>新增大类名称</span><input type="text" id="newcat-name" placeholder="例如：生活"></label>
+          <label class="f" style="flex:0 0 150px"><span>计入工作时间？</span>
+            <select id="newcat-counts"><option value="0">否</option><option value="1">是</option></select></label>
+          <div style="flex:0 0 auto"><button class="btn" id="newcat-add">新增</button></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>目标设置 <span class="sub">软件不预设任何数字，由你自己填</span></h2>
+        <div id="set-goals"></div>
+        <div class="inline mt8">
+          <label class="f"><span>周六折算比例（周六目标 = 工作日 × 此比例）</span>
+            <input type="number" id="set-ratio" step="0.05" min="0" max="1"></label>
+          <div style="flex:0 0 auto"><button class="btn" id="set-ratio-save">保存比例</button></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>二级任务管理 <span class="sub">新增 / 改名 / 合并 / 归档</span></h2>
+        <div class="subcard">
+          <div class="inline">
+            <label class="f"><span>归类到哪个大类</span>
+              <select id="nt-cat-set"></select></label>
+            <label class="f"><span>新二级任务的名字</span>
+              <input type="text" id="nt-name-set" placeholder="例如：升力计算"></label>
+            <div style="flex:0 0 auto"><button class="btn small primary" id="nt-add-set">＋ 新增二级任务</button></div>
+          </div>
+          <div class="hint">名字会原样保存，不做清洗；如果这个大类下已经有同名任务，
+            会提示「已经存在」并直接选中它，不会建出两条一样的。</div>
+        </div>
+        <div class="inline">
+          <label class="f"><span>任务</span><select id="task-pick"></select></label>
+          <label class="f"><span>新名字</span><input type="text" id="task-newname"></label>
+          <div style="flex:0 0 auto"><button class="btn" id="task-rename">改名</button></div>
+        </div>
+        <div class="inline mt8">
+          <label class="f"><span>把这个任务合并到</span><select id="task-merge-to"></select></label>
+          <div style="flex:0 0 auto"><button class="btn" id="task-merge">合并</button></div>
+          <div style="flex:0 0 auto"><button class="btn" id="task-archive">归档/取消归档</button></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>标签管理 <span class="sub">改名 / 合并</span></h2>
+        <div class="inline">
+          <label class="f"><span>标签</span><select id="tag-pick"></select></label>
+          <label class="f"><span>新名字</span><input type="text" id="tag-newname"></label>
+          <div style="flex:0 0 auto"><button class="btn" id="tag-rename">改名</button></div>
+        </div>
+        <div class="inline mt8">
+          <label class="f"><span>合并到</span><select id="tag-merge-to"></select></label>
+          <div style="flex:0 0 auto"><button class="btn" id="tag-merge">合并</button></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>其他设置</h2>
+        <div id="set-other"></div>
+        <div class="mt8"><button class="btn primary" id="set-save">保存设置</button></div>
+      </div>
+
+      <div class="card">
+        <h2>导出 Excel <span class="sub">4 个 sheet，可勾选排除大类</span></h2>
+        <div class="inline">
+          <label class="f"><span>开始</span><input type="date" id="ex-start"></label>
+          <label class="f"><span>结束</span><input type="date" id="ex-end"></label>
+        </div>
+        <div class="mt8" id="ex-cats"></div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px">
+          <button class="btn primary" id="ex-run">导出到 export\</button>
+          <button class="btn" id="ex-open">打开 export\ 目录</button>
+        </div>
+        <div class="table-wrap mt8" id="ex-list"></div>
+      </div>
+
+      <div class="card">
+        <h2>备份与恢复 <span class="sub">每天自动备份，保留最近若干份</span></h2>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn primary" id="bk-now">立即备份</button>
+          <button class="btn" id="bk-open">打开 backup\ 目录</button>
+        </div>
+        <div class="table-wrap mt8" id="bk-list"></div>
+      </div>
+
+      <div class="card">
+        <h2>撤销 <span class="sub">最近若干步操作可撤销</span></h2>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn primary" id="undo-do">撤销上一步</button>
+          <button class="btn" id="undo-refresh">刷新</button>
+        </div>
+        <div class="table-wrap mt8" id="undo-list"></div>
+      </div>
+
+      <div class="card">
+        <h2>数据文件位置 <span class="sub">你可以直接找到它们</span></h2>
+        <div id="set-paths"></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<div id="toast"></div>
+<div id="modal-host"></div>
+
+<script src="app.js"></script>
+</body>
+</html>
